@@ -4,10 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author christophermortensen
- */
 public class Factory {
 
     private static Factory instance;
@@ -25,11 +21,11 @@ public class Factory {
     }
     
     private void createFactory(){
-        emf = Persistence.createEntityManagerFactory("ServerSidePU");
+        emf = Persistence.createEntityManagerFactory("FifthElementServerPU");
     }
     
     public EntityManager getManager() {
-        return emf.createEntityManager();
+        return emf.createEntityManager(); 
     }
     
 }

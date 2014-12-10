@@ -3,7 +3,7 @@ package facadeTests;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
-import model.User;
+import model.UserInfo;
 import webinterfaces.UserFacadeInterface;
 
 /**
@@ -12,7 +12,7 @@ import webinterfaces.UserFacadeInterface;
  */
 public class UserFacadeMock implements UserFacadeInterface{
 
-    private List<User> users;
+    private List<UserInfo> users;
     private Gson transformer;
     
     public UserFacadeMock(Gson transformer){
@@ -27,7 +27,7 @@ public class UserFacadeMock implements UserFacadeInterface{
 
     @Override
     public String getOneUserAsJSON(long user_id) {
-        for(User user : users){
+        for(UserInfo user : users){
             if(user.getUser_id() == user_id){
                 return transformer.toJson(user);
             }
@@ -36,18 +36,18 @@ public class UserFacadeMock implements UserFacadeInterface{
     }
 
     @Override
-    public User createUserFromJSON(String json) {
-        User userToCreate = transformer.fromJson(json, User.class);
+    public UserInfo createUserFromJSON(String json) {
+        UserInfo userToCreate = transformer.fromJson(json, UserInfo.class);
         userToCreate.setUser_id(99999l + (users.size() + 1));
         users.add(userToCreate);
         return userToCreate;
     }
 
     @Override
-    public User editUser(String json, long user_id) {
-        for(User user : users){
+    public UserInfo editUser(String json, long user_id) {
+        for(UserInfo user : users){
             if(user.getUser_id() == user_id){
-                User editedUser = transformer.fromJson(json, User.class);
+                UserInfo editedUser = transformer.fromJson(json, UserInfo.class);
                 user.setUsername(editedUser.getUsername());
                 user.setEmail(editedUser.getEmail());
                 user.setPassword(editedUser.getPassword());
@@ -58,10 +58,10 @@ public class UserFacadeMock implements UserFacadeInterface{
     }
 
     @Override
-    public User deleteUser(long user_id) {
+    public UserInfo deleteUser(long user_id) {
         for(int i = 0; i < users.size(); i++){
             if(users.get(i).getUser_id() == user_id){
-                User userToDelete = users.get(i);
+                UserInfo userToDelete = users.get(i);
                 users.remove(i);
                 return userToDelete;
             }

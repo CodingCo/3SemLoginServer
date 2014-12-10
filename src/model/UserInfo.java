@@ -3,11 +3,8 @@ package model;
 import java.io.Serializable;
 import javax.persistence.*;
 
-/**
- *
- * @author christophermortensen
- */
-public class User implements Serializable {
+@Entity
+public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,24 +23,13 @@ public class User implements Serializable {
     @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "SALT", unique = true)
-    private String salt;
-
-    public User() {
+    public UserInfo() {
     }
 
-    public User(String username, String email, String password) {
+    public UserInfo(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public User(Long user_id, String username, String email, String password, String salt) {
-        this.user_id = user_id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.salt = salt;
     }
 
     public Long getUser_id() {
@@ -76,10 +62,6 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
     }
 
     @Override

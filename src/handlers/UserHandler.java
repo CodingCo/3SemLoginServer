@@ -3,23 +3,23 @@ package handlers;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import model.UserInfo;
 import webinterfaces.UserFacadeInterface;
 
-/**
- *
- * @author christophermortensen
- */
 public class UserHandler implements HttpHandler {
-    Gson transformer;
+
+    Gson gson;
     UserFacadeInterface facade;
     ServerResponse sr;
-    
+
     private String response;
     private int status;
-    
-    public UserHandler(Gson transformer, UserFacadeInterface facade, ServerResponse sr){
-        this.transformer = transformer;
+
+    public UserHandler(Gson gson, UserFacadeInterface facade, ServerResponse sr) {
+        this.gson = gson;
         this.facade = facade;
         this.sr = sr;
     }
@@ -29,13 +29,13 @@ public class UserHandler implements HttpHandler {
         String method = he.getRequestMethod().toUpperCase();
         response = "";
         status = 0;
-        
+
         switch (method) {
             case "GET":
                 getRequest(he);
                 break;
 
-            case "POST":
+            case "POST": // validates user
                 postRequest(he);
                 break;
 
@@ -43,27 +43,38 @@ public class UserHandler implements HttpHandler {
                 deleteRequest(he);
                 break;
 
-            case "PUT":
+            case "PUT": // creates user
                 putRequest(he);
                 break;
         }
         he.getResponseHeaders().add("Content-Type", "application/json");
         sr.sendMessage(he, status, response);
     }
-    
-    private void getRequest(HttpExchange he) throws IOException{
-        
+
+    private void getRequest(HttpExchange he) throws IOException {
+
     }
-    
-    private void postRequest(HttpExchange he) throws IOException{
-        
+
+    private void postRequest(HttpExchange he) throws IOException {
+
     }
-    
-    private void deleteRequest(HttpExchange he) throws IOException{
-        
+
+    private void deleteRequest(HttpExchange he) throws IOException {
+
     }
-    
-    private void putRequest(HttpExchange he) throws IOException{
+
+    private void putRequest(HttpExchange he) throws IOException {
         
+            facade.createUserFromJSON(readFromJson(he));
+
     }
+
+    private String readFromJson(HttpExchange he) throws IOException {
+        String input;
+        BufferedReader in = new BufferedReader(new InputStreamReader(he.getRequestBody()));
+        input = in.readLine();
+
+        return input;
+    }
+
 }

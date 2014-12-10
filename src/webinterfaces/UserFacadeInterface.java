@@ -1,6 +1,6 @@
 package webinterfaces;
 
-import model.User;
+import model.UserInfo;
 
 /**
  *
@@ -12,10 +12,10 @@ public interface UserFacadeInterface {
     
     public String getOneUserAsJSON(long user_id);
     
-    public User createUserFromJSON(String json);
+    public UserInfo createUserFromJSON(String json);
     
-    public User editUser(String json, long user_id);
+    public UserInfo editUser(String json, long user_id);
     
-    public User deleteUser(long user_id);
+    public UserInfo deleteUser(long user_id);
     
 }
