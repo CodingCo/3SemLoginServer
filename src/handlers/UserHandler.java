@@ -57,6 +57,8 @@ public class UserHandler implements HttpHandler {
 
     private void postRequest(HttpExchange he) throws IOException {
 
+        System.err.println("Does user exists? --> " + facade.validateUser(readFromJson(he)));
+
     }
 
     private void deleteRequest(HttpExchange he) throws IOException {
@@ -64,8 +66,16 @@ public class UserHandler implements HttpHandler {
     }
 
     private void putRequest(HttpExchange he) throws IOException {
-        
-            facade.createUserFromJSON(readFromJson(he));
+
+        UserInfo createdUser = facade.createUserFromJSON(readFromJson(he));
+
+        if (createdUser != null) {
+            status = 200;
+            response = gson.toJson(createdUser);
+        } else {
+            status = 500;
+            response = "Couldn't create requested credentials";
+        }
 
     }
 

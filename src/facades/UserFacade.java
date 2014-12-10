@@ -8,6 +8,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import model.UserInfo;
 import webServer.Factory;
 import webServer.HashCreator;
@@ -31,8 +32,32 @@ public class UserFacade implements UserFacadeInterface {
     }
 
     @Override
-    public String getOneUserAsJSON(long user_id) {
+    public String getOneUserAsJSON(String username) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean validateUser(String json) {
+        UserInfo userFromJson = gson.fromJson(json, UserInfo.class);
+
+        // get the user from db with the same userName
+        if (userFromJson.getUsername() != null) {
+
+            Query qu = em.createQuery("SELECT u FROM UserInfo u WHERE u.username = :arg").setParameter("arg", userFromJson.getUsername());
+            UserInfo userFromDb = (UserInfo) qu.getSingleResult();
+
+            if (userFromDb.getUsername() != null) {
+
+                try {
+                    return HashCreator.validatePassword(userFromJson.getPassword(), userFromDb.getPassword());
+                } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+                    return false;
+                }
+            }
+
+        }
+
+        return false;
     }
 
     /**
@@ -43,14 +68,20 @@ public class UserFacade implements UserFacadeInterface {
      */
     @Override
     public UserInfo createUserFromJSON(String json) {
-        UserInfo user = gson.fromJson(json, UserInfo.class);
+        UserInfo userFromJson = gson.fromJson(json, UserInfo.class);
 
         try {
-            user.setPassword(HashCreator.createHash(user.getPassword()));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            userFromJson.setPassword(HashCreator.createHash(userFromJson.getPassword()));
+
+            em.getTransaction().begin();
+            em.persist(userFromJson);
+            em.getTransaction().commit();
+
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalStateException ex) {
+            return null;
         }
 
-        return null;
+        return userFromJson;
     }
 
     @Override

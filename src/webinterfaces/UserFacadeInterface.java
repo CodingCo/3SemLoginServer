@@ -10,7 +10,9 @@ public interface UserFacadeInterface {
     
     public String getUsersAsJSON();
     
-    public String getOneUserAsJSON(long user_id);
+    public String getOneUserAsJSON(String userAsJson);
+    
+    public boolean validateUser(String json);
     
     public UserInfo createUserFromJSON(String json);
     

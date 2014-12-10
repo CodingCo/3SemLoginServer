@@ -26,11 +26,11 @@ public class UserFacadeMock implements UserFacadeInterface{
     }
 
     @Override
-    public String getOneUserAsJSON(long user_id) {
+    public String getOneUserAsJSON(String username) { // Before: long user_id 
         for(UserInfo user : users){
-            if(user.getUser_id() == user_id){
-                return transformer.toJson(user);
-            }
+//            if(user.getUser_id() == user_id){
+//                return transformer.toJson(user);
+//            }
         }
         return null;
     }
@@ -67,5 +67,10 @@ public class UserFacadeMock implements UserFacadeInterface{
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean validateUser(String json) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
