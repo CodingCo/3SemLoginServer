@@ -20,6 +20,7 @@ public class ServerResponse {
     }
 
     public void sendMessage(HttpExchange he, int statusCode, String message) throws IOException {
+        System.err.println("I was here!");
         send(he, statusCode, message.getBytes());
     }
 

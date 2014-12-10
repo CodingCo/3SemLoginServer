@@ -30,6 +30,7 @@ public class Server {
         this.gson = new GsonBuilder().create(); 
         this.hash = new HashCreator();
         this.userFacade = new UserFacade(gson);
+        this.sr = new ServerResponse();
     }
 
     public void start() throws IOException {
