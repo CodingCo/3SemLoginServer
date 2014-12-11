@@ -28,9 +28,9 @@ public class UserFacadeMock implements UserFacadeInterface{
     @Override
     public String getOneUserAsJSON(String username) { // Before: long user_id 
         for(UserInfo user : users){
-//            if(user.getUser_id() == user_id){
-//                return transformer.toJson(user);
-//            }
+            if(user.getUsername().equalsIgnoreCase(username)){
+                return transformer.toJson(user);
+            }
         }
         return null;
     }
@@ -44,9 +44,9 @@ public class UserFacadeMock implements UserFacadeInterface{
     }
 
     @Override
-    public UserInfo editUser(String json, long user_id) {
+    public UserInfo editUser(String json, String username) {
         for(UserInfo user : users){
-            if(user.getUser_id() == user_id){
+            if(user.getUsername().equalsIgnoreCase(username)){
                 UserInfo editedUser = transformer.fromJson(json, UserInfo.class);
                 user.setUsername(editedUser.getUsername());
                 user.setEmail(editedUser.getEmail());
@@ -58,9 +58,9 @@ public class UserFacadeMock implements UserFacadeInterface{
     }
 
     @Override
-    public UserInfo deleteUser(long user_id) {
+    public UserInfo deleteUser(String username) {
         for(int i = 0; i < users.size(); i++){
-            if(users.get(i).getUser_id() == user_id){
+            if(users.get(i).getUsername().equalsIgnoreCase(username)){
                 UserInfo userToDelete = users.get(i);
                 users.remove(i);
                 return userToDelete;
