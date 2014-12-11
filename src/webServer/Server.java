@@ -23,12 +23,10 @@ public class Server {
     
     private UserFacadeInterface userFacade;
     private ServerResponse sr;
-    private HashCreator hash;
     
     // Constructor
     public Server() throws IOException {
         this.gson = new GsonBuilder().create(); 
-        this.hash = new HashCreator();
         this.userFacade = new UserFacade(gson);
         this.sr = new ServerResponse();
     }
@@ -37,7 +35,8 @@ public class Server {
 
         server = HttpServer.create(new InetSocketAddress(address, port), 0);
         server.createContext("/", testHandler());
-        server.createContext("/validateUser", new UserHandler(gson, userFacade, sr));
+        server.createContext("/login/validateUser", new UserHandler(gson, userFacade, sr));
+        server.createContext("/login/createUser", new UserHandler(gson, userFacade, sr));
         server.setExecutor(null);
         server.start();
         System.out.println("Server startet on: " + server.getAddress());
@@ -51,7 +50,7 @@ public class Server {
             public void handle(HttpExchange he) throws IOException {
 
                 String contentType = "text/html";
-                String response = "Hello World, again!";
+                String response = "Server is running!";
                 byte[] bytesToSend = response.getBytes();
 
                 Headers h = he.getResponseHeaders();
