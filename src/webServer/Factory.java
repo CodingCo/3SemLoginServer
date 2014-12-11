@@ -21,7 +21,7 @@ public class Factory {
     }
     
     private void createFactory(){
-        emf = Persistence.createEntityManagerFactory("FifthElementServerPUCK");
+        emf = Persistence.createEntityManagerFactory("FifthElementServerPU");
     }
     
     public EntityManager getManager() {
