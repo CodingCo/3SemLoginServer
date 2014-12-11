@@ -83,6 +83,7 @@ public class UserFacade implements UserFacadeInterface {
 
     @Override
     public UserInfo editUser(String json, String username) {
+<<<<<<< HEAD
         UserInfo editedUser = transformer.fromJson(json, UserInfo.class);
         Query qu = em.createQuery("SELECT u FROM UserInfo u WHERE u.username = :arg").setParameter("arg", username);
         UserInfo userToEdit = (UserInfo) qu.getSingleResult();
@@ -92,16 +93,23 @@ public class UserFacade implements UserFacadeInterface {
         userToEdit.setPassword(editedUser.getPassword());
         em.getTransaction().commit();
         return userToEdit;
+=======
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+>>>>>>> FETCH_HEAD
     }
 
     @Override
     public UserInfo deleteUser(String username) {
+<<<<<<< HEAD
         em.getTransaction().begin();
         Query qu = em.createQuery("SELECT u FROM UserInfo u WHERE u.username = :arg").setParameter("arg", username);
         UserInfo userFromDb = (UserInfo) qu.getSingleResult();
         em.remove(userFromDb);
         em.getTransaction().commit();
         return userFromDb;
+=======
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+>>>>>>> FETCH_HEAD
     }
 
 }

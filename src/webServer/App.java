@@ -10,6 +10,8 @@ public class App {
             server.start();
             
         } catch (Exception ex) {
+            System.err.println("Error: " + ex.getMessage());
+            ex.printStackTrace();
         }
 
     }
