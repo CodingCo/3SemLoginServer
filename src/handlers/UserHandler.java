@@ -56,8 +56,22 @@ public class UserHandler implements HttpHandler {
     }
 
     private void postRequest(HttpExchange he) throws IOException {
+        String userAsJson = readFromJson(he);
+        System.err.println("Inside postRequest");
+        
+        if (facade.validateUser(userAsJson)) {
+            System.err.println("User exists");
+            // user exists!
+            //UserInfo user = gson.fromJson(userAsJson, UserInfo.class);
+            //String userFromDb = facade.getOneUserAsJSON(user.getUsername());
+            response = "{}";
+            status = 200;
 
-        System.err.println("Does user exists? --> " + facade.validateUser(readFromJson(he)));
+        } else {
+            response = "Couldn't find user";
+            status = 404;
+            System.err.println("Send something");
+        }
 
     }
 

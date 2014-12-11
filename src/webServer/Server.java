@@ -19,34 +19,34 @@ import webinterfaces.UserFacadeInterface;
 public class Server {
 
     private HttpServer server;
+    private UserFacadeInterface userFacade;
+    private ServerResponse sr;
+    private final Properties property = Utility.initProperties("serverproperties.txt");
+
     private Gson gson;
     private int port;
     private String ip;
-    private final Properties property = Utility.initProperties("serverproperties.txt");
-    
-    private UserFacadeInterface userFacade;
-    private ServerResponse sr;
-    
+
     // Constructor
     public Server() throws IOException {
-        this.gson = new GsonBuilder().create(); 
+        this.gson = new GsonBuilder().create();
         this.userFacade = new UserFacade(gson);
         this.sr = new ServerResponse();
     }
 
     public void start() throws IOException {
-        
+
         ip = property.getProperty("ipaddress");
         port = Integer.parseInt(property.getProperty("webport"));
-        
+
         server = HttpServer.create(new InetSocketAddress(ip, port), 0);
-        server.createContext("/", testHandler());
         server.createContext("/login/validateUser", new UserHandler(gson, userFacade, sr));
         server.createContext("/login/createUser", new UserHandler(gson, userFacade, sr));
+        server.createContext("/", testHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Server startet on: " + server.getAddress());
-        
+
     }
 
     private HttpHandler testHandler() {
