@@ -27,6 +27,9 @@ public class UserHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange he) throws IOException {
         String method = he.getRequestMethod().toUpperCase();
+
+        String userRequest = he.getRequestURI().toString().substring(7);
+
         response = "";
         status = 0;
 
@@ -35,15 +38,21 @@ public class UserHandler implements HttpHandler {
                 getRequest(he);
                 break;
 
-            case "POST": // validates user
-                postRequest(he);
+            case "POST": // Both user validation and user creation comes with a post 
+
+                if (userRequest.equals("validateUser")) {
+                    validateUserCredentials(he);
+                } else {
+                    createUser(he);
+                }
+
                 break;
 
             case "DELETE":
                 deleteRequest(he);
                 break;
 
-            case "PUT": // creates user
+            case "PUT":
                 putRequest(he);
                 break;
         }
@@ -55,37 +64,44 @@ public class UserHandler implements HttpHandler {
 
     }
 
-    private void postRequest(HttpExchange he) throws IOException {
+    private void putRequest(HttpExchange he) throws IOException {
+    }
+
+    private void deleteRequest(HttpExchange he) throws IOException {
+    }
+
+    private void validateUserCredentials(HttpExchange he) throws IOException {
         String userAsJson = readFromJson(he);
 
         if (facade.validateUser(userAsJson)) {
-            UserInfo user = gson.fromJson(userAsJson, UserInfo.class);
-            String userFromDb = facade.getOneUserAsJSON(user.getUsername());
-            response = userFromDb;
+            String username = gson.fromJson(userAsJson, UserInfo.class).getUsername();
+            String userFromDb = facade.getOneUserAsJSON(username);
+            
+            // Wont send hashed password back
+            UserInfo user = gson.fromJson(userFromDb, UserInfo.class);
+            user.setPassword("");
+            
+            response = gson.toJson(user);
             status = 200;
 
         } else {
-            response = "{\"err\": \"true\"}";
-            status = 404;
-            System.err.println("Send something");
+            response = "{\"err\": \"true\", \"msg\":\"Password or username not correct!\"}";
+            status = 401;
+            System.err.println("Someone tried to log in, but failed");
         }
 
     }
 
-    private void deleteRequest(HttpExchange he) throws IOException {
-
-    }
-
-    private void putRequest(HttpExchange he) throws IOException {
-
+    private void createUser(HttpExchange he) throws IOException {
+        System.err.println("Trying to create user");
         UserInfo createdUser = facade.createUserFromJSON(readFromJson(he));
-        
+
         if (createdUser != null) {
             status = 200;
             response = gson.toJson(createdUser);
         } else {
-            status = 500;
-            response = "Couldn't create requested credentials";
+            status = 409;
+            response = "{\"err\": \"true\", \"msg\":\"Username or email already exists!\"}";
         }
 
     }

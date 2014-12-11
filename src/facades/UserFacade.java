@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import model.UserInfo;
+import org.eclipse.persistence.exceptions.DatabaseException;
 import webServer.Factory;
 import webServer.HashCreator;
 import webinterfaces.UserFacadeInterface;
@@ -74,8 +75,8 @@ public class UserFacade implements UserFacadeInterface {
             em.persist(userFromJson);
             em.getTransaction().commit();
 
-        } catch (Exception  ex) { // Just temp
-            System.err.println("Error: " + ex.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
             return null;
         }
 
