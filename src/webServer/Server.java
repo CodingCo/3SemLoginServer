@@ -12,14 +12,17 @@ import com.google.gson.GsonBuilder;
 import facades.UserFacade;
 import handlers.ServerResponse;
 import handlers.UserHandler;
+import java.util.Properties;
+import utility.Utility;
 import webinterfaces.UserFacadeInterface;
 
 public class Server {
 
     private HttpServer server;
     private Gson gson;
-    private int port = 9090;
-    private String address = "127.0.0.1";
+    private int port;
+    private String ip;
+    private final Properties property = Utility.initProperties("serverproperties.txt");
     
     private UserFacadeInterface userFacade;
     private ServerResponse sr;
@@ -32,8 +35,11 @@ public class Server {
     }
 
     public void start() throws IOException {
-
-        server = HttpServer.create(new InetSocketAddress(address, port), 0);
+        
+        ip = property.getProperty("ipaddress");
+        port = Integer.parseInt(property.getProperty("webport"));
+        
+        server = HttpServer.create(new InetSocketAddress(ip, port), 0);
         server.createContext("/", testHandler());
         server.createContext("/login/validateUser", new UserHandler(gson, userFacade, sr));
         server.createContext("/login/createUser", new UserHandler(gson, userFacade, sr));
