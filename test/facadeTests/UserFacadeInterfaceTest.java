@@ -41,10 +41,12 @@ public class UserFacadeInterfaceTest {
         //== Only one should be commented when running the test
         instance = new UserFacade(transformer);
         //instance = new UserFacadeMock(transformer);
+       
     }
     
     @After
     public void tearDown() {
+        
     }
     
     /**
@@ -78,7 +80,7 @@ public class UserFacadeInterfaceTest {
         instance.createUserFromJSON(p1AsJSON);
         UserInfo fetchedUser = transformer.fromJson(instance.getOneUserAsJSON(u1.getUsername()), UserInfo.class);
         
-        if (fetchedUser.getUser_id() == 100000 && u1.getUsername().equals(fetchedUser.getUsername())
+        if (u1.getUsername().equals(fetchedUser.getUsername())
                 && u1.getEmail().equals(fetchedUser.getEmail())){
             assertTrue(true);
         } else{
@@ -92,12 +94,11 @@ public class UserFacadeInterfaceTest {
     @Test
     public void testCreateUserFromJSON() {
         System.out.println("createUserFromJSON");
-        UserInfo u1 = new UserInfo("yrsa94", "yrsa94@mailme.com", "samsø");
+        String username = "yrsa94";
+        UserInfo u1 = new UserInfo(username, "yrsa94@mailme.com", "samsø");
         instance.createUserFromJSON(transformer.toJson(u1));
-        long user_id = 100000;
         UserInfo fetchedUser = transformer.fromJson(instance.getOneUserAsJSON(u1.getUsername()), UserInfo.class);
-        System.err.println(fetchedUser.getUser_id());
-        assertEquals(user_id, (long) fetchedUser.getUser_id());
+        assertEquals(username, fetchedUser.getUsername());
     }
 
     /**
@@ -135,19 +136,30 @@ public class UserFacadeInterfaceTest {
         String expResultJSON = instance.getOneUserAsJSON(username);
         String deletedUserJSON = transformer.toJson(instance.deleteUser(username));
         assertEquals(expResultJSON, deletedUserJSON);
-    
-        // Tests if it is deleted
-        String shouldBeNull = instance.getOneUserAsJSON(username);
-        assertEquals(shouldBeNull, null);
     }
 
     /**
      * Test of validateUser, of class UserFacadeInterface
+     * Case 1: Create user, Expect true
+     * 
+     * Case 2: Retrieve from db, Expect false.
      */
     @Test
     public void validateUser(){
+        System.out.println("validateUser");
+        // Case 1
+        String username = "kygo";
+        UserInfo u1 = new UserInfo(username, "kygo@kygo.com", "kygokygo");
+        instance.createUserFromJSON(transformer.toJson(u1));
+        String jsonInput = "{username: kygo, password: kygokygo}";
+        boolean validated1 = instance.validateUser(jsonInput);
+        assertEquals(validated1, true);
         
-        assertEquals(false, false);
-        
+        /*
+        // Case 2
+        String notExistingUser = "{username: idontexist, password: strongpassword}";
+        boolean validated2 = instance.validateUser(notExistingUser);
+        assertEquals(validated2, false);
+        */
     }
 }

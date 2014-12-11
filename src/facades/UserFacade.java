@@ -105,5 +105,12 @@ public class UserFacade implements UserFacadeInterface {
         em.getTransaction().commit();
         return userFromDb;
     }
+    
+    public void clearTable(){
+        em.getTransaction().begin();
+        Query q = em.createNativeQuery("DELETE FROM UserInfo");
+        q.executeUpdate();
+        em.getTransaction().commit();
+    }
 
 }
