@@ -2,6 +2,7 @@ package facadeTests;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import facades.UserFacade;
 import model.UserInfo;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -38,17 +39,14 @@ public class UserFacadeInterfaceTest {
         transformer = gsonBuilder.create();
         
         //== Only one should be commented when running the test
-        // instance = new UserFacadeDB(transformer);
-        instance = new UserFacadeMock(transformer);
+        instance = new UserFacade(transformer);
+        //instance = new UserFacadeMock(transformer);
     }
     
     @After
     public void tearDown() {
     }
-    // user_id
-    // username
-    // email
-    // password
+    
     /**
      * Test of getUsersAsJSON method, of class UserFacadeInterface.
      */
@@ -98,6 +96,7 @@ public class UserFacadeInterfaceTest {
         instance.createUserFromJSON(transformer.toJson(u1));
         long user_id = 100000;
         UserInfo fetchedUser = transformer.fromJson(instance.getOneUserAsJSON(u1.getUsername()), UserInfo.class);
+        System.err.println(fetchedUser.getUser_id());
         assertEquals(user_id, (long) fetchedUser.getUser_id());
     }
 
