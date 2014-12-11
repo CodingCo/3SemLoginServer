@@ -74,7 +74,8 @@ public class UserFacade implements UserFacadeInterface {
             em.persist(userFromJson);
             em.getTransaction().commit();
 
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalStateException ex) {
+        } catch (Exception  ex) { // Just temp
+            System.err.println("Error: " + ex.getMessage());
             return null;
         }
 

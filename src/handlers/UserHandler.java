@@ -57,18 +57,15 @@ public class UserHandler implements HttpHandler {
 
     private void postRequest(HttpExchange he) throws IOException {
         String userAsJson = readFromJson(he);
-        System.err.println("Inside postRequest");
-        
+
         if (facade.validateUser(userAsJson)) {
-            System.err.println("User exists");
-            // user exists!
-            //UserInfo user = gson.fromJson(userAsJson, UserInfo.class);
-            //String userFromDb = facade.getOneUserAsJSON(user.getUsername());
-            response = "{}";
+            UserInfo user = gson.fromJson(userAsJson, UserInfo.class);
+            String userFromDb = facade.getOneUserAsJSON(user.getUsername());
+            response = userFromDb;
             status = 200;
 
         } else {
-            response = "Couldn't find user";
+            response = "{\"err\": \"true\"}";
             status = 404;
             System.err.println("Send something");
         }
@@ -82,7 +79,7 @@ public class UserHandler implements HttpHandler {
     private void putRequest(HttpExchange he) throws IOException {
 
         UserInfo createdUser = facade.createUserFromJSON(readFromJson(he));
-
+        
         if (createdUser != null) {
             status = 200;
             response = gson.toJson(createdUser);
