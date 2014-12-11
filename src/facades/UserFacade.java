@@ -92,10 +92,18 @@ public class UserFacade implements UserFacadeInterface {
         userToEdit.setPassword(editedUser.getPassword());
         em.getTransaction().commit();
         return userToEdit;
+<<<<<<< HEAD
+=======
+        
+>>>>>>> FETCH_HEAD
     }
 
     @Override
     public UserInfo deleteUser(String username) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> FETCH_HEAD
         em.getTransaction().begin();
         Query qu = em.createQuery("SELECT u FROM UserInfo u WHERE u.username = :arg").setParameter("arg", username);
         UserInfo userFromDb = (UserInfo) qu.getSingleResult();
