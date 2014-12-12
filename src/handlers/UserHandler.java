@@ -72,7 +72,7 @@ public class UserHandler implements HttpHandler {
 
     private void validateUserCredentials(HttpExchange he) throws IOException {
         String userAsJson = readFromJson(he);
-
+        
         if (facade.validateUser(userAsJson)) {
             String username = gson.fromJson(userAsJson, UserInfo.class).getUsername();
             String userFromDb = facade.getOneUserAsJSON(username);
@@ -93,7 +93,6 @@ public class UserHandler implements HttpHandler {
     }
 
     private void createUser(HttpExchange he) throws IOException {
-        System.err.println("Trying to create user");
         UserInfo createdUser = facade.createUserFromJSON(readFromJson(he));
 
         if (createdUser != null) {

@@ -45,13 +45,13 @@ public class UserFacade implements UserFacadeInterface {
     @Override
     public boolean validateUser(String json) {
         UserInfo userFromJson = transformer.fromJson(json, UserInfo.class);
+
         try {
             // get the user from db with the same userName
             if (userFromJson.getUsername() != null) {
 
                 Query qu = em.createQuery("SELECT u FROM UserInfo u WHERE u.username = :arg").setParameter("arg", userFromJson.getUsername());
                 UserInfo userFromDb = (UserInfo) qu.getSingleResult();
-
                 if (userFromDb.getUsername() != null) {
 
                     return HashCreator.validatePassword(userFromJson.getPassword(), userFromDb.getPassword());
