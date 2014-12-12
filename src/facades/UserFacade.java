@@ -52,6 +52,7 @@ public class UserFacade implements UserFacadeInterface {
 
                 Query qu = em.createQuery("SELECT u FROM UserInfo u WHERE u.username = :arg").setParameter("arg", userFromJson.getUsername());
                 UserInfo userFromDb = (UserInfo) qu.getSingleResult();
+                System.out.println("USER INFO: " + userFromDb.toString());
                 if (userFromDb.getUsername() != null) {
 
                     return HashCreator.validatePassword(userFromJson.getPassword(), userFromDb.getPassword());
@@ -74,7 +75,7 @@ public class UserFacade implements UserFacadeInterface {
     @Override
     public UserInfo createUserFromJSON(String json) {
         UserInfo userFromJson = transformer.fromJson(json, UserInfo.class);
-
+        
         try {
             userFromJson.setPassword(HashCreator.createHash(userFromJson.getPassword()));
 

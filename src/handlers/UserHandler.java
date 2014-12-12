@@ -42,8 +42,11 @@ public class UserHandler implements HttpHandler {
 
                 if (userRequest.equals("validateUser")) {
                     validateUserCredentials(he);
-                } else {
+                } else if(userRequest.equals("createUser")){
                     createUser(he);
+                }else{
+                    response = "Unknown request";
+                    status = 404;
                 }
 
                 break;
@@ -72,29 +75,29 @@ public class UserHandler implements HttpHandler {
 
     private void validateUserCredentials(HttpExchange he) throws IOException {
         String userAsJson = readFromJson(he);
-        
+
         if (facade.validateUser(userAsJson)) {
             String username = gson.fromJson(userAsJson, UserInfo.class).getUsername();
             String userFromDb = facade.getOneUserAsJSON(username);
-            
+
             // Wont send hashed password back
             UserInfo user = gson.fromJson(userFromDb, UserInfo.class);
             user.setPassword("");
-            
+
             response = gson.toJson(user);
             status = 200;
 
         } else {
             response = "{\"err\": \"true\", \"msg\":\"Password or username not correct!\"}";
             status = 401;
-            System.err.println("Someone tried to log in, but failed");
+            System.err.println("Someone failed to login: " + userAsJson);
         }
 
     }
 
     private void createUser(HttpExchange he) throws IOException {
         UserInfo createdUser = facade.createUserFromJSON(readFromJson(he));
-
+        
         if (createdUser != null) {
             status = 200;
             response = gson.toJson(createdUser);
@@ -106,11 +109,16 @@ public class UserHandler implements HttpHandler {
     }
 
     private String readFromJson(HttpExchange he) throws IOException {
-        String input;
+        String input = "";
+        String temp = "";
         BufferedReader in = new BufferedReader(new InputStreamReader(he.getRequestBody()));
-        input = in.readLine();
 
+        while ((temp = in.readLine()) != null) {
+            input += temp;
+        }
+        
         return input;
     }
+
 
 }

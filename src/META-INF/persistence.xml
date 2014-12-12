@@ -5,9 +5,9 @@
     <class>model.UserInfo</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@datdb.cphbusiness.dk:1521:dat"/>
-      <property name="javax.persistence.jdbc.user" value="cphtj151"/>
+      <property name="javax.persistence.jdbc.user" value="cphcm138"/>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
-      <property name="javax.persistence.jdbc.password" value="cphtj151"/>
+      <property name="javax.persistence.jdbc.password" value="cphcm138"/>
     </properties>
   </persistence-unit>
 </persistence>

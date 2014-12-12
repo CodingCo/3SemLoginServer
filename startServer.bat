@@ -1,0 +1,1 @@
+java -cp dist/FifthElementServer webServer.App
